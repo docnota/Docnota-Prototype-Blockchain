@@ -1,0 +1,30 @@
+version: '2'
+
+networks:
+  docnota:
+
+services:
+
+  cli:
+    container_name: cli
+    image: hyperledger/fabric-ca-tools
+    tty: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_ID=cli
+      - CORE_PEER_ADDRESS=pubpeer.docnota.com:7051
+      - CORE_PEER_LOCALMSPID=DocnotaMSP
+      - CORE_PEER_TLS_ENABLED=false
+      - CORE_PEER_MSPCONFIGPATH=/data/msp
+      - FABRIC_CA_HOME=/data/msp
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash
+    volumes:
+        - /var/run/:/host/var/run/
+        - ./data:/data
+        - ./scripts:/scripts
+        - ./chaincode:/opt/gopath/src/docnota.com/chaincode
+    networks:
+      - docnota
